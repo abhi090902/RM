@@ -229,26 +229,7 @@ if api_key:
             # Combine only the date-filtered high ratings
             df_combined = pd.concat([results, df_filtered_high_rating], ignore_index=True)
 
-            justified_low_ratings = results[results['justification'] == 'justified']
-            correct_reviews = len(justified_low_ratings) + len(df_filtered_high_rating)
 
-            unjustified_reviews = results[results['justification'] == 'unjustified']
-            if unjustified_reviews.empty:
-                unjustified_reviews_count = 0
-            else:
-                unjustified_reviews_count = len(unjustified_reviews)
-
-
-            # Overall summary
-            summary_data = {
-                "Total Reviews": [len(df_filtered)],
-                "Correct Reviews": [correct_reviews],
-                "Unjustified Reviews": [unjustified_reviews_count],
-                "Overrated Reviews": [len(df_combined[(df_combined['justification'].str.contains('should have been', na=False)) & (df_combined['output_rating'] < df_combined['vSp Rating'])])],
-                "Underrated Reviews": [len(df_combined[(df_combined['justification'].str.contains('should have been', na=False)) & (df_combined['output_rating'] > df_combined['vSp Rating'])])]
-            }
-            st.write("Overall Summary")
-            st.table(pd.DataFrame(summary_data))
 
             # Download results
             st.write("Download the Analysis csv with justification and explanation")
