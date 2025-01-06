@@ -215,22 +215,22 @@ if api_key:
         plt.xticks()  # Rotate x-axis labels for better readability
         st.pyplot(fig)
 
-
         if st.button("Analyze"):
             df_filtered_low_rating = df_filtered[df_filtered['vSp Rating'] <= 4]
             df_filtered_high_rating = df_filtered[df_filtered['vSp Rating'] == 5]  # Isolate 5 ratings in date range
             results = pd.DataFrame()
-
+        
             BATCH_SIZE = 10
             for start in range(0, len(df_filtered_low_rating), BATCH_SIZE):
                 batch = df_filtered_low_rating.iloc[start:start + BATCH_SIZE]
                 results = pd.concat([results, process_batch(batch)], ignore_index=True)
-
+        
             # Combine only the date-filtered high ratings
             df_combined = pd.concat([results, df_filtered_high_rating], ignore_index=True)
-
-
-
+        
+            # Display the combined DataFrame (optional for debugging)
+            #st.dataframe(df_combined)
+        
             # Download results
             st.write("Download the Analysis csv with justification and explanation")
             output = StringIO()
@@ -241,3 +241,4 @@ if api_key:
                 file_name='analysis_results.csv',
                 mime='text/csv'
             )
+
