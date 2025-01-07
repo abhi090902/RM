@@ -21,7 +21,7 @@ def load_local_csv(file_path):
 st.title("AI Content Rating Analysis")
 
 # Load and Handle CSV Data
-csv_file_path = "dataset.csv"  # Replace with your actual CSV file
+csv_file_path = "RM LIVE_RM - Dec2024_Table - Sheet1.csv"  # Replace with your actual CSV file
 df = load_local_csv(csv_file_path)
 
 if df is not None:
