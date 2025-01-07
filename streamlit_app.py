@@ -17,7 +17,7 @@ st.title("AI Content Rating Analysis")
 #OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 #api_key = st.secrets["OPENAI_API_KEY"]
 api_key= "abc"
-csv_file_path = "dataset.csv"  # Replace with your actual CSV file
+csv_file_path = "RM LIVE_RM - Dec2024_Table - Sheet1.csv"  # Replace with your actual CSV file
 df = load_local_csv(csv_file_path)
 
 if api_key:
