@@ -17,7 +17,8 @@ st.title("AI Content Rating Analysis")
 #OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 #api_key = st.secrets["OPENAI_API_KEY"]
 api_key= "abc"
-
+csv_file_path = "dataset.csv"  # Replace with your actual CSV file
+df = load_local_csv(csv_file_path)
 
 if api_key:
     openai.api_key = api_key
@@ -184,11 +185,12 @@ if api_key:
       
       return overrated, overrated_summary, underrated, underrated_summary
 
-    if uploaded_file:
-        df = pd.read_csv(uploaded_file)
-        df['vSp Rating'] = pd.to_numeric(df['vSp Rating'], errors='coerce')
-        df_filtered = df.dropna(subset=['vSp Rating']).copy()
-        df_filtered['Date'] = pd.to_datetime(df_filtered['Date'], format='%b %d %Y')
+    if df is not None:
+        df['Date'] = pd.to_datetime(df['Date'], format='%b %d %Y', errors='coerce')
+        #df = pd.read_csv(uploaded_file)
+        #df['vSp Rating'] = pd.to_numeric(df['vSp Rating'], errors='coerce')
+        #df_filtered = df.dropna(subset=['vSp Rating']).copy()
+        #df_filtered['Date'] = pd.to_datetime(df_filtered['Date'], format='%b %d %Y')
 
         start_date = st.date_input("Start Date", value=df_filtered['Date'].min())
         #st.write("**Note:** Only choose either one or two days for analysis.")  # Add note below start date
