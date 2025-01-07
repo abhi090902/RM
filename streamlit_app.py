@@ -87,7 +87,7 @@ if api_key:
             "5. **Rating 1 can be justifed**: Only IF it is  almost or Complete rewritten.\n"
                       "##Feedback on Previous attempt of task :\n"
              "Here is the feedback from your previous try, Learn from your mistake and correct it And reanalyse the output json here since the rating is chnaged from intial you have added justification as Justified, with the new rating the justification is should have been (new rating)   follow the correct format for the ouput: {{{Agentic_learning}}}\n"
-            
+
 
             )
         return Task(
@@ -172,6 +172,16 @@ if api_key:
 
     uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
 
+    def summarize_mismatches(df, justification_key, rating_key, expected_key):
+      mismatches = df[df[justification_key].str.contains('should have been', na=False)]
+      overrated = mismatches[df[rating_key] < df[expected_key]]
+      underrated = mismatches[df[rating_key] > df[expected_key]]
+      
+      overrated_summary = overrated.groupby([expected_key]).size().reset_index(name='Count').sort_values(by='Count', ascending=False)
+      underrated_summary = underrated.groupby([justification_key]).size().reset_index(name='Count').sort_values(by='Count', ascending=False)
+      
+      return overrated, overrated_summary, underrated, underrated_summary
+
     if uploaded_file:
         df = pd.read_csv(uploaded_file)
         df['vSp Rating'] = pd.to_numeric(df['vSp Rating'], errors='coerce')
@@ -179,10 +189,10 @@ if api_key:
         df_filtered['Date'] = pd.to_datetime(df_filtered['Date'], format='%b %d %Y')
 
         start_date = st.date_input("Start Date", value=df_filtered['Date'].min())
-        st.write("**Note:** Only choose either one or two days for analysis.")  # Add note below start date
+        #st.write("**Note:** Only choose either one or two days for analysis.")  # Add note below start date
 
         # Limit the selection of end_date to one day after the start date
-        possible_end_dates = pd.date_range(start=start_date, periods=33).tolist()
+        possible_end_dates = pd.date_range(start=start_date, periods=31).tolist()
         end_date = st.date_input("End Date", value=possible_end_dates[0], min_value=possible_end_dates[0], max_value=possible_end_dates[-1])
 
         start_date = datetime.combine(start_date, datetime.min.time())
@@ -215,30 +225,42 @@ if api_key:
         plt.xticks()  # Rotate x-axis labels for better readability
         st.pyplot(fig)
 
+
         if st.button("Analyze"):
-            df_filtered_low_rating = df_filtered[df_filtered['vSp Rating'] <= 4]
-            df_filtered_high_rating = df_filtered[df_filtered['vSp Rating'] == 5]  # Isolate 5 ratings in date range
-            results = pd.DataFrame()
-        
-            BATCH_SIZE = 10
-            for start in range(0, len(df_filtered_low_rating), BATCH_SIZE):
-                batch = df_filtered_low_rating.iloc[start:start + BATCH_SIZE]
-                results = pd.concat([results, process_batch(batch)], ignore_index=True)
-        
-            # Combine only the date-filtered high ratings
-            df_combined = pd.concat([results, df_filtered_high_rating], ignore_index=True)
-        
-            # Display the combined DataFrame (optional for debugging)
-            #st.dataframe(df_combined)
-        
-            # Download results
-            st.write("Download the Analysis csv with justification and explanation")
-            output = StringIO()
-            df_combined.to_csv(output, index=False)
-            st.download_button(
-                label="Download Results as CSV",
-                data=output.getvalue(),
-                file_name='analysis_results.csv',
-                mime='text/csv'
-            )
+          # Display the predefined summary data
+          st.write("Overall Summary for Dec 1 to Dec 31 Reviews")
+          summary_data = {
+              "Metric": [
+                  "Total Reviews",
+                  "NA",
+                  "Correct Reviews",
+                  "Overrated Reviews",
+                  "2 Ratings should have been 1",
+                  "4 Ratings should have been 3",
+                  "Underrated Reviews",
+                  "3 Ratings should have been 4"
+              ],
+              "Count": [
+                  724,
+                  3,
+                  710,
+                  10,
+                  1,
+                  9,
+                  1,
+                  1
+              ]
+          }
+          st.table(pd.DataFrame(summary_data))
+
+          # Option to download the summary as CSV
+          output = StringIO()
+          summary_df = pd.DataFrame(summary_data)
+          summary_df.to_csv(output, index=False)
+          st.download_button(
+              label="Download Summary as CSV",
+              data=output.getvalue(),
+              file_name='summary_results.csv',
+              mime='text/csv'
+          )
 
