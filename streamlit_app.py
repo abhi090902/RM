@@ -12,6 +12,14 @@ import re
 st.title("AI Content Rating Analysis")
 
 # Add input for OpenAI API key
+# Function to load local CSV file
+def load_local_csv(file_path):
+    try:
+        df = pd.read_csv(file_path, parse_dates=['Date'])
+        return df
+    except Exception as e:
+        st.error(f"Error loading CSV: {e}")
+        return None
 
 #api_key = st.text_input("Enter your OpenAI API key", type="password")
 #OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
