@@ -181,7 +181,7 @@ if api_key:
         batch[['output_rating', 'justification', 'explanation']] = output
         return batch
 
-    uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
+    #uploaded_file = st.file_uploader("Upload CSV file", type=["csv"])
 
     def summarize_mismatches(df, justification_key, rating_key, expected_key):
       mismatches = df[df[justification_key].str.contains('should have been', na=False)]
