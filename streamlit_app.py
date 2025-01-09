@@ -248,36 +248,36 @@ if api_key:
             else:
                 unjustified_reviews_count = len(unjustified_reviews)
 
-
-            # Generate summaries
-        overrated, overrated_summary, underrated, underrated_summary = summarize_mismatches(
-            df_combined, 'justification', 'output_rating', 'vSp Rating'
-        )
-        
-        # Display overall summary
-        st.write("Overall Summary")
-        summary_data = {
-            "Total Reviews": [len(df_filtered)],
-            "Correct Reviews": [len(df_filtered[df_filtered['justification'] == 'justified'])],
-            "Unjustified Reviews": [len(df_filtered[df_filtered['justification'] == 'unjustified'])],
-            "Overrated Reviews": [len(overrated)],
-            "Underrated Reviews": [len(underrated)],
-        }
-        st.table(pd.DataFrame(summary_data))
-        
-        # Display overrated and underrated details
-        st.write("Overrated Reviews Summary")
-        st.table(overrated_summary.rename(columns={'vSp Rating': 'Expected Rating'}))
-        
-        st.write("Underrated Reviews Summary")
-        st.table(underrated_summary.rename(columns={'justification': 'Mismatch Description'}))
-
-        # Option to download results
-        output = StringIO()
-        df_combined.to_csv(output, index=False)
-        st.download_button(
-            label="Download Results as CSV",
-            data=output.getvalue(),
-            file_name='analysis_results.csv',
-            mime='text/csv'
-        )
+    
+                # Generate summaries
+            overrated, overrated_summary, underrated, underrated_summary = summarize_mismatches(
+                df_combined, 'justification', 'output_rating', 'vSp Rating'
+            )
+            
+            # Display overall summary
+            st.write("Overall Summary")
+            summary_data = {
+                "Total Reviews": [len(df_filtered)],
+                "Correct Reviews": [len(df_filtered[df_filtered['justification'] == 'justified'])],
+                "Unjustified Reviews": [len(df_filtered[df_filtered['justification'] == 'unjustified'])],
+                "Overrated Reviews": [len(overrated)],
+                "Underrated Reviews": [len(underrated)],
+            }
+            st.table(pd.DataFrame(summary_data))
+            
+            # Display overrated and underrated details
+            st.write("Overrated Reviews Summary")
+            st.table(overrated_summary.rename(columns={'vSp Rating': 'Expected Rating'}))
+            
+            st.write("Underrated Reviews Summary")
+            st.table(underrated_summary.rename(columns={'justification': 'Mismatch Description'}))
+    
+            # Option to download results
+            output = StringIO()
+            df_combined.to_csv(output, index=False)
+            st.download_button(
+                label="Download Results as CSV",
+                data=output.getvalue(),
+                file_name='analysis_results.csv',
+                mime='text/csv'
+            )
