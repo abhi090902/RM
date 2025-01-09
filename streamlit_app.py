@@ -258,8 +258,8 @@ if api_key:
             st.write("Overall Summary")
             summary_data = {
                 "Total Reviews": [len(df_filtered)],
-                "Correct Reviews": [len(df_filtered[df_filtered['justification'] == 'justified'])],
-                "Unjustified Reviews": [len(df_filtered[df_filtered['justification'] == 'unjustified'])],
+                "Correct Reviews": correct_reviews,
+                "Unjustified Reviews": unjustified_reviews_count,
                 "Overrated Reviews": [len(overrated)],
                 "Underrated Reviews": [len(underrated)],
             }
