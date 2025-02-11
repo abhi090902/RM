@@ -76,15 +76,6 @@ if api_key:
             "First Priority: Instructions"
             "Strictly make sure, When review text is not present and if the rating is 1, 2 , 3 or 4 then  the provided rating should be considered justified and in the final output at  justification  it should be added justified"
 
-
-            "Second Priority:Time Based Instructions (Follow this only when first priority is not met)"
-            "Carry the analysis based on how much time (amount percentage of changes done or time taken for normal human to edit) the user took to arrive at the user-generated content from the AI content.\n"
-
-            "1. **Rating 5 can be justifed**: Only IF Only No changes needed. and are exactly identical \n "
-            "2. **Rating 4 can be justifed**: Only IF  it takes less than 20 to 30 seconds to do the changes \n"
-            "3. **Rating 3 can be justifed**: Only IF it takes about  30 to 60 seconds to do the changes.or if more than 50% of ai content is edited \n"
-            "4. **Rating 2 can be justifed**: Only IF it takes  1 minute - or more and is almost rewritten\n"
-            "5. **Rating 1 can be justifed**: Only IF it is  almost or Complete rewritten.\n"
                       "##Feedback on Previous attempt of task :\n"
              "Here is the feedback from your previous try, Learn from your mistake and correct it And reanalyse the output json here since the rating is chnaged from intial you have added justification as Justified, with the new rating the justification is should have been (new rating)   follow the correct format for the ouput: {{{Agentic_learning}}}\n"
 
